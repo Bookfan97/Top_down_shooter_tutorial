@@ -10,6 +10,9 @@ function love.load(arg)
   player.speed = 180
   zombies = {}
   bullets = {}
+  gameState = 2
+  maxTime = 2
+  timer = maxTime
 end
 
 function love.update(dt)
@@ -65,6 +68,14 @@ for i=#bullets,1,-1 do
     table.remove(bullets, i)
     end
   end
+  if gameState == 2 then
+    timer = timer - dt
+    if timer <= 0 then
+      spawnZombie()
+      maxTime = maxTime * 0.95
+      timer = maxTime
+    end
+  end
 end
 
 function love.draw()
@@ -88,12 +99,25 @@ end
 
 function spawnZombie()
   zombie = {}
-  zombie.x = math.random(0, love.graphics:getWidth())
-  zombie.y = math.random(0, love.graphics:getHeight())
+  zombie.x = 0
+  zombie.y = 0
   zombie.speed = 140
   zombie.dead = false
   table.insert(zombies, zombie)
-  local side = math.math.random(1, 4)
+  local side = math.random(1, 4)
+  if side == 1 then
+    zombie.x = -30
+    zombie.y =  math.random(0, love.graphics.getHeight())
+  elseif side == 2 then
+    zombie.x = math.random(0, love.graphics.getWidth())
+    zombie.y = -30
+  elseif side == 3 then
+    zombie.x = love.graphics:getWidth() + 30
+    zombie.y = math.random(0, love.graphics:getHeight())
+  else
+    zombie.x = math.random(0, love.graphics:getWidth())
+    zombie.y = love.graphics:getHeight() + 30
+  end
 end
 
 function spawnBullet()
